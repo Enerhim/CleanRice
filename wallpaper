@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Exit on error
+set -e
+
+# Check if exactly one argument is given
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 \"/path/to/image.jpg\""
+    exit 1
+fi
+
+# Get full absolute path, safely handle spaces
+image_path="$(realpath "$1")"
+
+# Config file path
+config_file="$HOME/.config/hypr/hyprpaper.conf"
+
+# Write to config file
+{
+    echo "preload=$image_path"
+    echo "wallpaper=,$image_path"
+} > "$config_file"
+
+# Restart hyprpaper
+pkill -9 hyprpaper 2>/dev/null || true
+hyprpaper > /dev/null 2>&1 & disown
+
+echo "Wallpaper set to: $image_path"
+
