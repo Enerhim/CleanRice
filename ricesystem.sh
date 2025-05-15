@@ -33,15 +33,34 @@ install_pacman_pkgs() {
   pacman -Syu --noconfirm "${pacman_pkgs[@]}"
 }
 
-# Function: Install AUR helper yay
+# Function: Install AUR helper yay using precompiled binary from tar.gz
 install_yay() {
   if ! command -v yay &>/dev/null; then
-    echo "[*] Installing yay from AUR..."
-    git clone https://aur.archlinux.org/yay.git /tmp/yay
-    pushd /tmp/yay >/dev/null
-    makepkg -si --noconfirm
+    echo "[*] Installing yay from precompiled .tar.gz..."
+    arch=$(uname -m)
+    tmp_dir="/tmp/yay-bin"
+    mkdir -p "$tmp_dir"
+    pushd "$tmp_dir" >/dev/null
+
+    case "$arch" in
+      x86_64)
+        url="https://github.com/Jguer/yay/releases/download/v12.5.0/yay_12.5.0_x86_64.tar.gz"
+        ;;
+      aarch64)
+        url="https://github.com/Jguer/yay/releases/download/v12.5.0/yay_12.5.0_aarch64.tar.gz"
+        ;;
+      *)
+        echo "[ERROR] Unsupported architecture: $arch" >&2
+        exit 1
+        ;;
+    esac
+
+    curl -LO "$url"
+    tar -xzf yay_*.tar.gz
+    install -Dm755 yay /usr/bin/yay
+
     popd >/dev/null
-    rm -rf /tmp/yay
+    rm -rf "$tmp_dir"
   else
     echo "[*] yay already installed. Skipping."
   fi
@@ -88,6 +107,7 @@ EOF
 deploy_wallpaper() {
   echo "[*] Deploying wallpaper binary and images..."
   install -Dm755 "$repo_dir/wallpaper" /usr/local/bin/wallpaper
+  cp "$repo_dir/astro.png" /usr/share/backgrounds/astro.png
 }
 
 # Function: Configure fastfetch at shell startup
