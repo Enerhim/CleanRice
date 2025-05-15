@@ -88,7 +88,7 @@ backup_and_deploy_configs() {
 # Function: Install themes via yay
 install_aur_themes() {
   echo "[*] Installing papirus-icon-theme and sddm-theme-corners-git via yay..."
-  yay -S --noconfirm papirus-icon-theme sddm-theme-corners-git
+  yay -S --noconfirm papirus-icon-theme
 }
 
 # Function: Configure display manager
