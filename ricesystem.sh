@@ -8,7 +8,7 @@ IFS=$'\n\t'
 # Variables
 timestamp=$(date +"%Y%m%d_%H%M%S")
 backup_dir="$HOME/config_backup_$timestamp"
-repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)"
 user_shell_rc="$HOME/.bashrc"  # Adjust if using zsh: ~/.zshrc
 
 # Package list for pacman
@@ -57,7 +57,14 @@ install_yay() {
 
     curl -LO "$url"
     tar -xzf yay_*.tar.gz
-    install -Dm755 yay /usr/bin/yay
+
+    yay_path=$(find . -type f -name "yay" -perm -u+x | head -n 1)
+    if [[ -z "$yay_path" ]]; then
+      echo "[ERROR] yay binary not found in extracted files." >&2
+      exit 1
+    fi
+
+    install -Dm755 "$yay_path" /usr/bin/yay
 
     popd >/dev/null
     rm -rf "$tmp_dir"
