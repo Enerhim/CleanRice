@@ -2,6 +2,7 @@
 The dotfiles for my arch linux rice
 
 Reddit Post: https://www.reddit.com/r/unixporn/comments/1kdtpex/hyprland_ricing_after_a_long_time/
+
 Tutorial Video: https://www.youtube.com/watch?v=5V3Ld7xyED0
 
 ![1](https://github.com/user-attachments/assets/4b5ca6ed-fb63-4d07-85a2-4c36c835552e)
